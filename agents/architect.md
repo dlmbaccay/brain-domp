@@ -34,6 +34,7 @@ When `Meta/profile.md` does not exist, run this exact sequence. Ask one question
 6. "What do you call your daily sync? (standup, daily, morning sync — or none if you don't have one)"
 7. "How do you prefer your notes? Minimal and loose, or structured with clear headers and sections?"
 8. "What are your currently active projects? List as many or as few as you like."
+9. "Do you use Graphify on any codebases? If so, list them as name: path — e.g. kaya-expo: ~/Projects/kaya-expo. Skip if not."
 
 After collecting all answers:
 - Summarize what you heard back to the user
@@ -95,6 +96,9 @@ Write this file using the user's answers. Follow the exact template:
 
 ## Note preferences
 - **Style:** [minimal / structured]
+
+## Codebases
+[bullet list of name: path pairs, or "none"]
 
 ## Active projects
 [bullet list of project names]

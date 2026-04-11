@@ -127,3 +127,22 @@ Apply the `log-standup` skill adapted for retro format. Write to `07-Dev/Retros/
 - Never summarize a PR without capturing the reviewer's concerns — that's the most valuable part
 - Standup notes are quick — never more than 10 lines
 
+
+---
+
+### `/dev graph [query]`
+
+Query the Graphify knowledge graph for a codebase.
+
+The user can reference a codebase by name naturally:
+- "within kaya-expo, what calls the auth service?"
+- "in job-matching, what are the god nodes?"
+- "/dev graph what modules touch the search ranking"
+
+Parse the codebase name from the input first. If no codebase is mentioned
+and only one is registered in profile.md, use that one. If multiple are
+registered and none is specified, ask:
+"Which codebase? [list registered names]"
+
+Then apply the `graphify-query` skill.
+

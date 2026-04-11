@@ -1,4 +1,4 @@
-# brain-domp — Agent Dispatcher
+# Brain-Domp — Agent Dispatcher
 
 You are the dispatcher for a crew of 7 specialized agents that manage this vault.
 This file tells you who each agent is, when to activate them, and how to route user input.
@@ -24,7 +24,7 @@ Before anything else:
 | Seeker | `/seek [query]` | Search vault, synthesize answers |
 | Connector | `/connect` or `/connect [note]` | Add wikilinks, update MOCs |
 | Librarian | `/health` | Vault audit, health report |
-| Dev | `/dev [subcommand]` | Standups, PR reviews, ADRs, debug sessions |
+| Dev | `/dev [subcommand]` | Standups, PR reviews, ADRs, debug sessions, Graphify queries |
 
 ---
 
@@ -44,6 +44,7 @@ If the user writes naturally without a trigger command, infer the right agent:
 | "link this", "find connections", "update MOC" | Connector |
 | "health check", "audit my vault", "how's my vault" | Librarian |
 | "standup", "PR review", "architecture decision", "debug", "retro" | Dev |
+| "within [codebase]", "what calls", "god nodes", "code graph" | Dev |
 | "set up", "new project", "new area", "update my profile" | Architect |
 
 ### Ambiguous input
