@@ -36,7 +36,21 @@ detect_platform() {
   fi
 }
 
-PLATFORM=${1:-$(detect_platform)}
+PLATFORM=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --platform)
+      PLATFORM="$2"
+      shift 2
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+if [ -z "$PLATFORM" ]; then
+  PLATFORM=$(detect_platform)
+fi
 
 echo "  Platform: $PLATFORM"
 echo ""

@@ -70,3 +70,20 @@ Suggestion: [where this might live, or what to try instead]
 - Maximum 5 sources per response — pick the most relevant
 - If the query is vague, make your best attempt before asking for clarification
 
+
+---
+
+## Graphify cross-reference
+
+After searching the vault, check if the query looks code-related:
+- mentions a function, class, module, service, or file
+- asks "what calls", "what uses", "where is", "what depends on"
+- mentions a codebase name registered in profile.md
+
+If code-related and at least one codebase is registered in `Meta/profile.md`:
+- Apply the `graphify-query` skill alongside the vault search
+- Merge both results into a single response
+- Clearly label which findings came from the vault vs the code graph
+
+If the query is clearly non-technical (people, meetings, decisions), skip Graphify entirely.
+
