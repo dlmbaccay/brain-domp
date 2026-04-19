@@ -19,7 +19,7 @@ tasks:
     when: weekday evenings around 7pm
     prompt: >
       Run the digest-work-eod skill. Synthesize a daily EOD digest from today's work
-      vault daily notes and write it to vaults/personal/06-Daily/. Skip silently if
+      vault daily notes and write it to 06-Daily/. Skip silently if
       the work vault is not present at vaults/work/.
 
   - name: weekly-aggregate
@@ -27,12 +27,12 @@ tasks:
     when: Sunday mornings
     prompt: >
       Run the aggregate-week skill. Read the past 7 days of EOD digest files from
-      vaults/personal/06-Daily/ and synthesize a weekly summary. Write to
-      vaults/personal/06-Daily/YYYY-MM-DD-week-summary.md.
+      06-Daily/ and synthesize a weekly summary. Write to
+      06-Daily/YYYY-MM-DD-week-summary.md.
 
   - name: health-check
     interval: 1w
     when: Sunday evenings
     prompt: >
-      Activate Librarian. Run a full vault health check across vaults/personal/.
+      Activate Librarian. Run a full vault health check across the vault.
       Write the report to Meta/health-report.md. Post a summary to the user.

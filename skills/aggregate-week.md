@@ -11,7 +11,7 @@ Read the past 7 days of EOD digest files and synthesize a weekly summary.
 
 ## Step 1 — Collect EOD digests
 
-Look for `vaults/personal/06-Daily/*-work-eod.md` files with dates in the past 7 days (relative to today).
+Look for `06-Daily/*-work-eod.md` files with dates in the past 7 days (relative to today).
 
 If no EOD digest files are found, stop and report:
 ```
@@ -59,7 +59,7 @@ related: []
 
 ## Step 4 — Write the summary
 
-Write to `vaults/personal/06-Daily/YYYY-MM-DD-week-summary.md` where the date is today.
+Write to `06-Daily/YYYY-MM-DD-week-summary.md` where the date is today.
 
 Never overwrite an existing summary. If one already exists for today, append `-2` to the filename.
 

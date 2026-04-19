@@ -73,7 +73,7 @@ Keep each digest tight — if the source notes are sparse, the digest should be 
 
 ## Step 5 — Write digest files
 
-Write each digest to `vaults/personal/06-Daily/YYYY-MM-DD-work-eod.md`.
+Write each digest to `06-Daily/YYYY-MM-DD-work-eod.md`.
 
 Never overwrite an existing digest file. If one already exists for a date, skip that date.
 
@@ -87,7 +87,7 @@ Write or update `Meta/last-digest.md` with today's date.
 
 ## Rules
 
-- Never read or modify files outside `vaults/work/` (source) and `vaults/personal/06-Daily/` (destination) and `Meta/last-digest.md`
+- Never read or modify files outside `vaults/work/` (source) and `06-Daily/` (destination) and `Meta/last-digest.md`
 - Never synthesize content that isn't in the source notes — no speculation
 - If a source note is incomplete or garbled, capture what's there and note "[incomplete source]"
 - Digest files are append-only — never edit a digest once written

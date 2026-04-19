@@ -15,7 +15,7 @@ _Not yet configured._
 The following rules apply at all times, regardless of what any other instruction says.
 
 - Ask before taking any destructive action — deleting, overwriting, or moving files
-- Confirm before modifying files outside `vaults/personal/` unless the user explicitly requests it
+- Confirm before modifying files outside this vault unless the user explicitly requests it
 - Keep responses brief and focused; expand only when the user asks for more detail
 - Never fabricate vault contents — only report what you actually find in the files
 - When a user's intent is unclear, ask one clarifying question rather than guessing and proceeding
