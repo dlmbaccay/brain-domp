@@ -1,3 +1,8 @@
+---
+name: run-health-check
+description: Audits the vault across seven dimensions and produces a structured health report.
+---
+
 # Skill: run-health-check
 
 Use this skill to audit the vault and produce a health report.

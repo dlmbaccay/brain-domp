@@ -1,3 +1,8 @@
+---
+name: create-links
+description: Finds and adds meaningful wikilinks to a note, creating stub notes where needed.
+---
+
 # Skill: create-links
 
 Use this skill to find and add meaningful wikilinks to a note.

@@ -19,7 +19,7 @@ No GUI. No proprietary format. No cloud. Just markdown files and an AI coding as
 | Agent | Trigger | What it does |
 |---|---|---|
 | **Architect** | first run / `/architect` | Onboards you, creates vault structure, scaffolds projects |
-| **Scribe** | `/scribe [input]` | Turns brain dumps into clean structured notes |
+| **Jot** | `/jot [input]` | Turns brain dumps into clean structured notes |
 | **Sorter** | `/sort` | Empties inbox, files every note to the right place |
 | **Seeker** | `/seek [query]` | Searches vault, synthesizes answers with citations |
 | **Connector** | `/connect` | Adds wikilinks, builds Maps of Content |
@@ -35,6 +35,8 @@ No GUI. No proprietary format. No cloud. Just markdown files and an AI coding as
 | `/dev adr [topic]` | Starts an Architecture Decision Record |
 | `/dev debug [problem]` | Opens a debugging session note |
 | `/dev retro` | Logs a sprint retrospective |
+| `/dev eod` | Synthesizes an EOD digest from work vault daily notes |
+| `/dev week` | Synthesizes a weekly summary from EOD digest files |
 
 ---
 
@@ -69,6 +71,27 @@ my-vault/
 
 The repo lives inside the vault as a sibling to your notes — not the other way around.
 
+### OpenClaw two-vault layout
+
+When installing for OpenClaw (e.g. on a VM with Syncthing), brain-domp expands to two vaults:
+
+```
+~/
+├── vaults/
+│   ├── personal/          ← your personal vault (same structure as above)
+│   │   ├── brain-domp/
+│   │   ├── 00-Inbox/
+│   │   ├── 06-Daily/      ← includes EOD digests and week summaries
+│   │   └── ...
+│   └── work/              ← synced from work machine via Syncthing
+│       ├── 06-Daily/      ← work daily notes (read by digest-work-eod skill)
+│       └── 07-Dev/
+│           └── PRs/       ← work PR review notes
+└── ~/.openclaw/workspace/ ← OpenClaw config (agents, skills, SOUL.md, HEARTBEAT.md)
+```
+
+On local installs (personal laptop only), the work vault is absent and digest skills no-op gracefully.
+
 ---
 
 ## Requirements
@@ -78,6 +101,8 @@ The repo lives inside the vault as a sibling to your notes — not the other way
   - [OpenCode](https://opencode.ai)
   - [Claude Code](https://claude.ai/code)
   - [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+  - [OpenClaw](https://openclaw.ai)
+  - [GitHub Copilot](https://github.com/features/copilot) (VS Code or CLI)
 
 ---
 

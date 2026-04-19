@@ -1,3 +1,8 @@
+---
+name: log-standup
+description: Formats a standup or retrospective note in the correct structure.
+---
+
 # Skill: log-standup
 
 Use this skill to format a standup or retrospective note.

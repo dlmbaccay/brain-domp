@@ -1,3 +1,8 @@
+---
+name: search-synthesize
+description: Searches the vault across multiple locations and synthesizes a direct answer from what is found.
+---
+
 # Skill: search-synthesize
 
 Use this skill to search the vault and synthesize an answer from what you find.

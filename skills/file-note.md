@@ -1,3 +1,8 @@
+---
+name: file-note
+description: Determines the correct PARA destination for a note and routes it there.
+---
+
 # Skill: file-note
 
 Use this skill to determine the correct destination for a note in the vault.

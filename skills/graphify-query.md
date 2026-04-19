@@ -1,3 +1,8 @@
+---
+name: graphify-query
+description: Queries a Graphify knowledge graph for a registered codebase and answers structural code questions.
+---
+
 # Skill: graphify-query
 
 Use this skill to query a Graphify knowledge graph for a codebase.

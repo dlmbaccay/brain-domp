@@ -1,3 +1,8 @@
+---
+name: debug-session
+description: Creates and manages a debugging session note, tracking hypotheses and resolution.
+---
+
 # Skill: debug-session
 
 Use this skill to create and manage a debugging session note.

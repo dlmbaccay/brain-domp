@@ -1,3 +1,8 @@
+---
+name: capture-note
+description: Transforms raw input into a clean, structured note using the user's preferred style.
+---
+
 # Skill: capture-note
 
 Use this skill to transform raw input into a clean structured note.

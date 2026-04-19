@@ -1,3 +1,8 @@
+---
+name: summarize-pr
+description: Creates a structured PR review note capturing decisions, concerns, and follow-up tasks.
+---
+
 # Skill: summarize-pr
 
 Use this skill to create a structured PR review note.

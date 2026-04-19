@@ -1,3 +1,8 @@
+---
+name: create-adr
+description: Creates a numbered Architecture Decision Record with context, options, decision, and consequences.
+---
+
 # Skill: create-adr
 
 Use this skill to create an Architecture Decision Record.

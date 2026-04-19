@@ -1,3 +1,8 @@
+---
+name: update-moc
+description: Creates or updates a Map of Content for a topic, linking all related notes.
+---
+
 # Skill: update-moc
 
 Use this skill to create or update a Map of Content (MOC) for a topic.

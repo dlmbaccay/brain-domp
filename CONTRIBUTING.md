@@ -109,7 +109,7 @@ Every skill file must have these sections:
 ## Submitting
 
 1. Fork the repo
-2. Create a branch: `git checkout -b agent/my-new-agent` or `fix/scribe-capture-format`
+2. Create a branch: `git checkout -b agent/my-new-agent` or `fix/jot-capture-format`
 3. Make your changes
 4. Open a PR with a clear description of what changed and why
 

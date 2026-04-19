@@ -19,7 +19,7 @@ Before anything else:
 | Agent | Trigger | Responsibility |
 |---|---|---|
 | Architect | `/architect` or first run | Vault setup, onboarding, project scaffolding |
-| Scribe | `/scribe [input]` | Capture brain dumps into clean notes |
+| Jot | `/jot [input]` | Capture brain dumps into clean notes |
 | Sorter | `/sort` | Triage inbox, file notes to correct folders |
 | Seeker | `/seek [query]` | Search vault, synthesize answers |
 | Connector | `/connect` or `/connect [note]` | Add wikilinks, update MOCs |
@@ -38,12 +38,15 @@ If the user writes naturally without a trigger command, infer the right agent:
 
 | User says something like... | Route to |
 |---|---|
-| "save this", "note this down", "capture this" | Scribe |
+| "save this", "note this down", "capture this" | Jot |
 | "file my inbox", "sort my notes", "triage" | Sorter |
 | "find", "search", "what do I know about", "what did we decide" | Seeker |
+| "what did I do today", "what did I do this week" | Seeker |
 | "link this", "find connections", "update MOC" | Connector |
 | "health check", "audit my vault", "how's my vault" | Librarian |
 | "standup", "PR review", "architecture decision", "debug", "retro" | Dev |
+| "give me the eod", "summarize today", "end of day" | Dev → `/dev eod` |
+| "weekly summary", "what happened this week", "week digest" | Dev → `/dev week` |
 | "within [codebase]", "what calls", "god nodes", "code graph" | Dev |
 | "set up", "new project", "new area", "update my profile" | Architect |
 
@@ -59,7 +62,7 @@ Never guess and activate the wrong agent.
 All agents communicate through `Meta/agent-messages.md`.
 After each agent completes its task, check if it posted messages for other agents.
 If messages exist and the user is still active, offer to run the next agent:
-"Scribe captured your note. Want me to have Sorter file it now?"
+"Jot captured your note. Want me to have Sorter file it now?"
 
 ---
 
@@ -79,7 +82,7 @@ If messages exist and the user is still active, offer to run the next agent:
 
 All agent definitions live in `agents/`:
 - `agents/architect.md`
-- `agents/scribe.md`
+- `agents/jot.md`
 - `agents/sorter.md`
 - `agents/seeker.md`
 - `agents/connector.md`

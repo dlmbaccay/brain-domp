@@ -6,6 +6,9 @@
 # Usage: bash updateme.sh
 # Run this from inside the brain-domp folder after pulling new changes.
 # Your vault notes are never touched.
+#
+# Auto-detects all installed platforms and updates each one.
+# Pass --platform <name> to update a specific platform only.
 # =============================================================================
 
 set -e
@@ -21,7 +24,24 @@ echo "  Vault: $VAULT_DIR"
 echo ""
 
 # -----------------------------------------------------------------------------
-# Step 1 — Pull latest changes
+# Parse flags
+# -----------------------------------------------------------------------------
+
+PLATFORM_FILTER=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --platform)
+      PLATFORM_FILTER="$2"
+      shift 2
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# -----------------------------------------------------------------------------
+# Pull latest changes
 # -----------------------------------------------------------------------------
 
 echo "  Pulling latest changes..."
@@ -30,85 +50,165 @@ git pull
 echo ""
 
 # -----------------------------------------------------------------------------
-# Step 2 — Detect platform from existing install
+# Detect all installed platforms
 # -----------------------------------------------------------------------------
 
-if [ -d "$VAULT_DIR/.claude" ]; then
-  PLATFORM="claude-code"
-  CONFIG_DIR="$VAULT_DIR/.claude"
-  DISPATCHER_FILE="$VAULT_DIR/CLAUDE.md"
-elif [ -d "$VAULT_DIR/.opencode" ]; then
-  PLATFORM="opencode"
-  CONFIG_DIR="$VAULT_DIR/.opencode"
-  DISPATCHER_FILE="$VAULT_DIR/AGENTS.md"
-elif [ -d "$VAULT_DIR/.gemini" ]; then
-  PLATFORM="gemini-cli"
-  CONFIG_DIR="$VAULT_DIR/.gemini"
-  DISPATCHER_FILE="$VAULT_DIR/GEMINI.md"
-else
-  echo "  Could not detect platform. Run launchme.sh first."
+DETECTED_PLATFORMS=()
+
+check_platform() {
+  local name="$1"
+  local config_dir="$2"
+  if [ -d "$config_dir" ]; then
+    if [ -n "$PLATFORM_FILTER" ] && [ "$PLATFORM_FILTER" != "$name" ]; then
+      return
+    fi
+    DETECTED_PLATFORMS+=("$name")
+    echo "  Detected: $name"
+  fi
+}
+
+check_platform "claude-code" "$HOME/.claude/agents"
+check_platform "opencode"    "$VAULT_DIR/.opencode/agents"
+check_platform "gemini-cli"  "$VAULT_DIR/.gemini/agents"
+check_platform "openclaw"    "$HOME/.openclaw/workspace/agents"
+check_platform "copilot"     "$VAULT_DIR/.github/agents"
+
+if [ ${#DETECTED_PLATFORMS[@]} -eq 0 ]; then
+  echo "  No installed platforms found. Run launchme.sh first."
   exit 1
 fi
 
-AGENTS_DIR="$CONFIG_DIR/agents"
-
-echo "  Detected platform: $PLATFORM"
 echo ""
 
 # -----------------------------------------------------------------------------
-# Step 3 — Update agent files
+# update_platform — updates one platform
 # -----------------------------------------------------------------------------
 
-echo "  Updating agents..."
-for agent in "$SCRIPT_DIR/agents/"*.md; do
-  cp "$agent" "$AGENTS_DIR/"
-  echo "    ~ $(basename $agent)"
-done
+update_platform() {
+  local platform="$1"
 
-# -----------------------------------------------------------------------------
-# Step 4 — Update skills
-# -----------------------------------------------------------------------------
+  echo "  ── Updating: $platform ──"
+  echo ""
 
-echo ""
-echo "  Updating skills..."
-for skill in "$SCRIPT_DIR/skills/"*.md; do
-  cp "$skill" "$VAULT_DIR/skills/"
-  echo "    ~ $(basename $skill)"
-done
+  local CONFIG_DIR DISPATCHER_FILE AGENTS_DIR
 
-# -----------------------------------------------------------------------------
-# Step 5 — Update dispatcher
-# -----------------------------------------------------------------------------
+  case "$platform" in
+    claude-code)
+      CONFIG_DIR="$HOME/.claude"
+      DISPATCHER_FILE="$VAULT_DIR/CLAUDE.md"
+      AGENTS_DIR="$CONFIG_DIR/agents"
+      ;;
+    opencode)
+      CONFIG_DIR="$VAULT_DIR/.opencode"
+      DISPATCHER_FILE="$VAULT_DIR/AGENTS.md"
+      AGENTS_DIR="$CONFIG_DIR/agents"
+      ;;
+    gemini-cli)
+      CONFIG_DIR="$VAULT_DIR/.gemini"
+      DISPATCHER_FILE="$VAULT_DIR/GEMINI.md"
+      AGENTS_DIR="$CONFIG_DIR/agents"
+      ;;
+    openclaw)
+      CONFIG_DIR="$HOME/.openclaw/workspace"
+      DISPATCHER_FILE="$VAULT_DIR/AGENTS.md"
+      AGENTS_DIR="$CONFIG_DIR/agents"
+      ;;
+    copilot)
+      CONFIG_DIR="$VAULT_DIR/.github"
+      DISPATCHER_FILE="$VAULT_DIR/AGENTS.md"
+      AGENTS_DIR="$CONFIG_DIR/agents"
+      ;;
+  esac
 
-echo ""
-echo "  Updating dispatcher..."
-cp "$SCRIPT_DIR/AGENTS.md" "$DISPATCHER_FILE"
-echo "    ~ $(basename $DISPATCHER_FILE)"
+  # -- Agents --
+  echo "  Updating agents..."
+  for agent in "$SCRIPT_DIR/agents/"*.md; do
+    local agent_name
+    agent_name="$(basename "$agent" .md)"
+    if [ "$platform" = "copilot" ]; then
+      cp "$agent" "$AGENTS_DIR/${agent_name}.agent.md"
+    else
+      cp "$agent" "$AGENTS_DIR/${agent_name}.md"
+    fi
+    echo "    ~ $(basename "$agent")"
+  done
 
-# -----------------------------------------------------------------------------
-# Step 6 — Update templates (never overwrite existing)
-# -----------------------------------------------------------------------------
-
-echo ""
-echo "  Checking templates..."
-for template in "$SCRIPT_DIR/Templates/"*.md; do
-  dest="$VAULT_DIR/Templates/$(basename $template)"
-  if [ ! -f "$dest" ]; then
-    cp "$template" "$dest"
-    echo "    + $(basename $template) (new)"
-  else
-    echo "    ~ $(basename $template) (skipped — your version kept)"
+  # Remove stale scribe.md from agents dir if it exists (renamed to jot)
+  if [ -f "$AGENTS_DIR/scribe.md" ] || [ -L "$AGENTS_DIR/scribe.md" ]; then
+    rm -f "$AGENTS_DIR/scribe.md"
+    echo "    - scribe.md (removed — replaced by jot.md)"
   fi
+  if [ -f "$AGENTS_DIR/scribe.agent.md" ] || [ -L "$AGENTS_DIR/scribe.agent.md" ]; then
+    rm -f "$AGENTS_DIR/scribe.agent.md"
+    echo "    - scribe.agent.md (removed — replaced by jot.agent.md)"
+  fi
+
+  # -- Skills --
+  echo ""
+  echo "  Updating skills..."
+  if [ "$platform" = "openclaw" ]; then
+    local skills_dir="$CONFIG_DIR/skills"
+    for skill in "$SCRIPT_DIR/skills/"*.md; do
+      local name
+      name="$(basename "$skill" .md)"
+      mkdir -p "$skills_dir/$name"
+      cp "$skill" "$skills_dir/$name/SKILL.md"
+      echo "    ~ $name/SKILL.md"
+    done
+  elif [ "$platform" = "copilot" ]; then
+    local skills_dir="$CONFIG_DIR/skills"
+    for skill in "$SCRIPT_DIR/skills/"*.md; do
+      local name
+      name="$(basename "$skill" .md)"
+      mkdir -p "$skills_dir/$name"
+      cp "$skill" "$skills_dir/$name/SKILL.md"
+      echo "    ~ $name/SKILL.md"
+    done
+  else
+    for skill in "$SCRIPT_DIR/skills/"*.md; do
+      cp "$skill" "$VAULT_DIR/skills/"
+      echo "    ~ $(basename "$skill")"
+    done
+  fi
+
+  # -- Dispatcher --
+  echo ""
+  echo "  Updating dispatcher..."
+  cp "$SCRIPT_DIR/AGENTS.md" "$DISPATCHER_FILE"
+  echo "    ~ $(basename "$DISPATCHER_FILE")"
+
+  # -- Templates (never overwrite existing) --
+  echo ""
+  echo "  Checking templates..."
+  for template in "$SCRIPT_DIR/Templates/"*.md; do
+    local dest="$VAULT_DIR/Templates/$(basename "$template")"
+    if [ ! -f "$dest" ]; then
+      cp "$template" "$dest"
+      echo "    + $(basename "$template") (new)"
+    else
+      echo "    ~ $(basename "$template") (skipped — your version kept)"
+    fi
+  done
+
+  echo ""
+  echo "  ✓ $platform updated"
+  echo ""
+}
+
+# -----------------------------------------------------------------------------
+# Run update for each detected platform
+# -----------------------------------------------------------------------------
+
+for platform in "${DETECTED_PLATFORMS[@]}"; do
+  update_platform "$platform"
 done
 
 # -----------------------------------------------------------------------------
 # Done
 # -----------------------------------------------------------------------------
 
-echo ""
 echo "  ✓ Update complete"
 echo ""
 echo "  Agents and skills updated. Your vault notes were not touched."
 echo "  Templates were not overwritten — edit them freely."
 echo ""
-
