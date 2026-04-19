@@ -20,13 +20,21 @@ You are sending Dominic a weekend morning message. Saturday and Sunday, 9am. Thi
 
 Do your research internally. Return ONLY the final composed message.
 
+## File paths (absolute)
+
+This skill runs in an isolated cron session without a defined working directory. Always use absolute paths. Workspace root is `/home/dominic/.openclaw/workspace/`.
+
+## Determining today's date
+
+Use the current date from your system context. Format as ISO: `YYYY-MM-DD`. You already know today's date.
+
 ## What to read (silently, no narration)
 
-Use the `read` tool. Skip missing files silently.
+Use the `read` tool with ABSOLUTE paths. Skip missing files silently.
 
-1. `SOUL.md` — weekend-specific commitments if any
-2. `00-Inbox/` — list directory, scan jots from the past 7 days for mentions of weekend plans
-3. `06-Daily/YYYY-MM-DD.md` for today's date — personal vault daily note if exists
+1. `/home/dominic/.openclaw/workspace/SOUL.md` — weekend-specific commitments if any
+2. List `/home/dominic/.openclaw/workspace/00-Inbox/` — scan filenames for jots from the past 7 days mentioning weekend plans
+3. `/home/dominic/.openclaw/workspace/06-Daily/YYYY-MM-DD.md` (today's date) — personal vault daily note if it exists
 4. Do NOT read work vault content — weekends are work-free
 
 ## How to compose the message
@@ -51,21 +59,21 @@ Structure:
 
 ### Saturday examples
 
-**With known plans:**
+With known plans:
 
 Saturday morning, Dominic.
 
 Hiking with Luis (the human one) today — have fun.
 Stay off the laptop.
 
-**No plans:**
+No plans:
 
 Saturday morning, Dominic.
 
 Weekend. No code today.
 Do something that's not work.
 
-**Quiet morning:**
+Quiet morning:
 
 Saturday morning, Dominic.
 
@@ -73,14 +81,14 @@ Enjoy the slow start. Whatever you've got planned, it can wait.
 
 ### Sunday examples
 
-**With plans:**
+With plans:
 
 Sunday morning, Dominic.
 
 Brunch with Mike — enjoy.
 Savor the day off. Week starts Monday.
 
-**No plans:**
+No plans:
 
 Sunday morning, Dominic.
 
@@ -93,7 +101,7 @@ Isolated cron session. Return ONLY the final message text — cron runner delive
 
 ## Absolute don'ts
 
-- Don't include tool call blocks in output
+- Don't include tool call blocks in output (CRITICAL)
 - Don't mention work, ever
 - Don't list anything — weekends aren't checklists
 - Don't reference productivity, goals, progress
@@ -101,3 +109,5 @@ Isolated cron session. Return ONLY the final message text — cron runner delive
 - Don't moralize about rest
 - Don't ask conversational questions
 - Don't use markdown code blocks or formatting
+- Don't offer `/architect` or suggest setup steps
+- Don't mention missing files or technical details

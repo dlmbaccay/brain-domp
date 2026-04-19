@@ -20,22 +20,30 @@ You are sending Dominic a 5pm weekday message to help him close out work. This i
 
 Do your research internally. Return ONLY the final composed message.
 
+## File paths (absolute)
+
+This skill runs in an isolated cron session without a defined working directory. Always use absolute paths. Workspace root is `/home/dominic/.openclaw/workspace/`.
+
+## Determining today's date
+
+Use the current date from your system context. Format as ISO: `YYYY-MM-DD`. You already know today's date.
+
 ## What to read (silently, no narration)
 
-Use the `read` tool for each. If a file doesn't exist, skip silently.
+Use the `read` tool with ABSOLUTE paths. Skip missing files silently.
 
-1. `Meta/profile.md` — core context
-2. `SOUL.md` — recurring commitments
-3. `06-Daily/YYYY-MM-DD.md` for today's date — personal vault daily note
-4. `vaults/work/06-Daily/YYYY-MM-DD.md` for today's date if it exists — work vault
-5. List `00-Inbox/` for any jots created today
+1. `/home/dominic/.openclaw/workspace/Meta/profile.md` — core context
+2. `/home/dominic/.openclaw/workspace/SOUL.md` — recurring commitments
+3. `/home/dominic/.openclaw/workspace/06-Daily/YYYY-MM-DD.md` (today's date) — personal vault daily note
+4. `/home/dominic/.openclaw/workspace/vaults/work/06-Daily/YYYY-MM-DD.md` (today's date, if exists) — work vault
+5. List `/home/dominic/.openclaw/workspace/00-Inbox/` for jots created today
 
 ### Friday-specific additional reads
 
-If today is Friday, also read this week's daily notes from both vaults to compose a week recap:
+If today is Friday, also read this week's daily notes from both vaults:
 
-- `06-Daily/YYYY-MM-DD.md` for each weekday of this week (Mon-Fri)
-- `vaults/work/06-Daily/YYYY-MM-DD.md` for each weekday of this week
+- `/home/dominic/.openclaw/workspace/06-Daily/YYYY-MM-DD.md` for each weekday of this week (Mon-Fri)
+- `/home/dominic/.openclaw/workspace/vaults/work/06-Daily/YYYY-MM-DD.md` for each weekday of this week
 - Skip missing files silently
 - Use these to compose a brief "week recap" in the clockout message
 
@@ -77,10 +85,11 @@ If today is Friday, also read this week's daily notes from both vaults to compos
 - **Work vault absent**: Skip it silently
 - **Friday with empty week**: Skip the recap, just send standard Friday message with "weekend mode" framing
 - **Friday with rich week**: Build a real 2-3 line summary of what got done
+- **All vault files missing**: Don't say "vault not initialized." Just send the minimal message.
 
 ### Examples
 
-**Normal weekday:**
+Normal weekday:
 
 5pm, Dominic. Time to clock out.
 
@@ -88,7 +97,7 @@ Standup done, design review done, KAYA-234 shipped.
 
 Enjoy the evening.
 
-**Tuesday with something open:**
+Tuesday with something open:
 
 5pm, Dominic. Clocking out time.
 
@@ -97,7 +106,7 @@ Up to you if you want to finish it tonight or leave for tomorrow.
 
 Either way, log off soon.
 
-**Friday with good week:**
+Friday with good week:
 
 5pm, Dominic. Week's done.
 
@@ -106,7 +115,7 @@ Solid output.
 
 Weekend mode. See you Monday.
 
-**Friday with light week:**
+Friday with light week:
 
 5pm, Dominic. Week's done.
 
@@ -114,7 +123,7 @@ Rest of the week went well overall.
 
 Weekend mode. See you Monday.
 
-**Empty day:**
+Empty day:
 
 5pm, Dominic. Good time to close the laptop.
 
@@ -124,7 +133,7 @@ Isolated cron session. Return ONLY the final message text — cron runner delive
 
 ## Absolute don'ts
 
-- Don't include tool call blocks in output
+- Don't include tool call blocks in output (CRITICAL)
 - Don't lecture about work-life balance
 - Don't moralize about screen time
 - Don't list everything like a performance review
@@ -132,3 +141,5 @@ Isolated cron session. Return ONLY the final message text — cron runner delive
 - Don't fake enthusiasm
 - Don't mention the weather, holidays, or anything unrelated
 - Don't use markdown code blocks or heavy formatting
+- Don't offer `/architect` or suggest setup steps
+- Don't mention missing files, "vault not initialized", or technical errors

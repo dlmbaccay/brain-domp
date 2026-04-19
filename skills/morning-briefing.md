@@ -21,22 +21,32 @@ You are composing Dominic's weekday morning briefing. He'll read this on his pho
 
 Do your research internally. Return ONLY the final composed message.
 
+## File paths (absolute)
+
+This skill runs in an isolated cron session without a defined working directory. Always use absolute paths when reading files. The workspace root is `/home/dominic/.openclaw/workspace/`.
+
+Do not use relative paths like `Meta/profile.md`. Use `/home/dominic/.openclaw/workspace/Meta/profile.md`.
+
+## Determining today's date
+
+Use the current date from your system context. Format as ISO: `YYYY-MM-DD`. You already know the date — no tool call needed for this.
+
 ## What to read (silently, no narration)
 
-Use the `read` tool (not `find` or `grep`) for each of these paths. If a file doesn't exist, move on silently — do not mention it in output.
+Use the `read` tool with ABSOLUTE paths. If a file doesn't exist, move on silently — do not mention it in output.
 
-1. `Meta/profile.md` — Dominic's core context
-2. `SOUL.md` — recurring commitments section
-3. `06-Daily/YYYY-MM-DD.md` for today's date — personal vault daily note
-4. `06-Daily/YYYY-MM-DD.md` for yesterday's date — check for unfinished items
-5. `vaults/work/06-Daily/YYYY-MM-DD.md` for today's date if it exists — work vault
-6. `00-Inbox/` — list directory contents, scan any jots from the past 3 days that reference today's date
+1. `/home/dominic/.openclaw/workspace/Meta/profile.md` — Dominic's core context
+2. `/home/dominic/.openclaw/workspace/SOUL.md` — recurring commitments section
+3. `/home/dominic/.openclaw/workspace/06-Daily/YYYY-MM-DD.md` (today's date) — personal vault daily note
+4. `/home/dominic/.openclaw/workspace/06-Daily/YYYY-MM-DD.md` (yesterday's date) — check for unfinished items
+5. `/home/dominic/.openclaw/workspace/vaults/work/06-Daily/YYYY-MM-DD.md` (today's date, if exists) — work vault
+6. List `/home/dominic/.openclaw/workspace/00-Inbox/` — scan filenames for any referencing today's date
 
 ### Monday-specific additional reads
 
-If today is Monday, also read the past week's work vault daily notes to summarize the week:
+If today is Monday, also read the past week's work vault daily notes:
 
-- `vaults/work/06-Daily/YYYY-MM-DD.md` for each weekday of last week (Mon through Fri)
+- `/home/dominic/.openclaw/workspace/vaults/work/06-Daily/YYYY-MM-DD.md` for each weekday of last week (Mon through Fri)
 - Skip files that don't exist silently
 - Use these to compose a brief "last week recap" line in the briefing
 
@@ -64,7 +74,7 @@ Morning Dominic. Monday <date>.
 
 ### Rules for all briefings
 
-- Total length: under 10 lines for Monday (to accommodate weekly recap), under 8 lines other days
+- Total length: under 10 lines for Monday, under 8 lines other days
 - Tone: warm and direct. No corporate filler. No "I hope you have a great day!"
 - Lead with what's concrete (meetings, deep-work blocks)
 - Name the top 1-2 focus items
@@ -73,16 +83,17 @@ Morning Dominic. Monday <date>.
 
 ### Edge cases
 
-- **No daily notes for today**: Just base the briefing on recurring commitments (if any) and yesterday's unfinished items
+- **No daily notes for today**: Base the briefing on recurring commitments (if any) and yesterday's unfinished items
 - **Nothing to report at all**: Send just `Morning Dominic. <Day name>. Light day ahead.` — don't pad
 - **Only recurring items**: `Morning Dominic. Standup at 10. Otherwise clear — good time for deep work.`
 - **Work vault absent**: Skip it silently. Don't mention the work vault by name.
 - **Monday with no work history**: Skip the weekly recap, just do standard briefing
-- **Profile missing**: Still do briefing, just don't reference Dominic's background details
+- **Profile missing**: Still do briefing without referencing background details
+- **All vault files missing**: Don't say "vault not initialized" or similar. Just send the minimal briefing.
 
 ### Examples of good briefings
 
-**Standard weekday:**
+Standard weekday:
 
 Morning Dominic. Tuesday April 22.
 
@@ -92,7 +103,7 @@ Focus: ship KAYA-234 PR
 
 PR review from yesterday still open.
 
-**Monday with weekly recap:**
+Monday with weekly recap:
 
 Morning Dominic. Monday April 28.
 
@@ -102,28 +113,30 @@ Last week: shipped KAYA-234 and KAYA-240, two PRs merged, design spec drafted.
 2pm: KAYA-247 kickoff
 Focus: scope the Supabase migration.
 
-**Light Monday, no weekly content:**
+Light Monday:
 
 Morning Dominic. Monday April 28.
 
 Light start to the week.
 10am standup.
 
-**Empty Tuesday:**
+Empty Tuesday:
 
 Morning Dominic. Tuesday April 22. Light day ahead.
 
 ## Delivery
 
-This skill is called from an isolated cron session. Cron owns delivery — just return your final briefing text as your response. Do not attempt to call the message tool directly. The cron runner will deliver your response to Discord #luis automatically.
+This skill is called from an isolated cron session. Cron owns delivery — just return your final briefing text as your response. Do not call the message tool directly. The cron runner delivers your response to Discord #luis automatically.
 
 ## Absolute don'ts
 
-- Don't include raw tool calls in your output (this is critical)
+- Don't include raw tool calls in your output (CRITICAL)
 - Don't narrate your process ("I'll check your calendar...")
 - Don't say "let me know if you want..."
+- Don't offer to run `/architect` or suggest setup steps
 - Don't fake enthusiasm
 - Don't pad the message to feel substantial
 - Don't mention missing files, empty vaults, or technical details
 - Don't assign priorities Dominic didn't assign himself
-- Don't include markdown code blocks or formatting — Discord renders plain text, and code blocks look weird
+- Don't use markdown code blocks or heavy formatting — Discord renders plain text, code blocks look weird
+- Don't prompt Dominic to take action (the briefing is informational, not instructional)
