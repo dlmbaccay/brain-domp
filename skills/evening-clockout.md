@@ -2,6 +2,18 @@
 name: evening-clockout
 trigger: Fired by cron job "evening-clockout" at 5pm weekdays (Asia/Manila)
 purpose: Send Dominic a kind wind-down reminder via Discord, helping him close out the work day
+implementation_note: |
+  As of 2026-04-19, cron isolated sessions have a known bug where workspace
+  skills aren't loaded. The cron job at ~/.openclaw/cron/jobs.json on the
+  droplet embeds this skill's logic inline in its --message prompt as a
+  workaround. This file remains the canonical design spec — the embedded
+  prompt should stay aligned with this file's rules. When OpenClaw fixes
+  issue #10804 / #43120 / #65075, the cron prompts can revert to
+  "Run the evening-clockout skill" and this file becomes the live source.
+  Related GitHub issues:
+  - openclaw/openclaw#10804 (isolated sessions don't load workspace skills)
+  - openclaw/openclaw#43120 (same issue, globally installed skills)
+  - openclaw/openclaw#65075 (workspace bootstrap path mismatch)
 ---
 
 # Evening Clockout
