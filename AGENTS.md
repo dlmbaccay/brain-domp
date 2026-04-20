@@ -25,6 +25,7 @@ Before anything else:
 | Connector | `/connect` or `/connect [note]` | Add wikilinks, update MOCs |
 | Librarian | `/health` | Vault audit, health report |
 | Dev | `/dev [subcommand]` | Standups, PR reviews, ADRs, debug sessions, Graphify queries |
+| Coach | `/coach [input]` | Fitness logging, gym consistency, workout recaps |
 
 ---
 
@@ -49,6 +50,8 @@ If the user writes naturally without a trigger command, infer the right agent:
 | "weekly summary", "what happened this week", "week digest" | Dev → `/dev week` |
 | "within [codebase]", "what calls", "god nodes", "code graph" | Dev |
 | "set up", "new project", "new area", "update my profile" | Architect |
+| "workout", "gym", "PPL", "push day", "pull day", "leg day", "lift", "bench", "squat", "deadlift" | Coach |
+| "did my workout", "skipped the gym", "log my session" | Coach |
 
 ### Ambiguous input
 If you cannot determine which agent to route to, ask:
@@ -88,6 +91,7 @@ All agent definitions live in `agents/`:
 - `agents/connector.md`
 - `agents/librarian.md`
 - `agents/dev.md`
+- `agents/coach.md`
 
 All skill files live in `skills/`:
 - `skills/capture-note.md`
@@ -100,4 +104,5 @@ All skill files live in `skills/`:
 - `skills/summarize-pr.md`
 - `skills/create-adr.md`
 - `skills/debug-session.md`
+- `skills/log-workout.md`
 
