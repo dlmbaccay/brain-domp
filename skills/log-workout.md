@@ -1,67 +1,105 @@
 ---
 name: log-workout
-description: Captures a workout log from user input and files it in 07-Fitness/workouts/.
+description: Updates today's workout file in-place with lifts, feel, and notes from user input.
 ---
 
 # Skill: log-workout
 
-Capture a workout log from user input and file it in `07-Fitness/workouts/`.
+Update today's workout file in `07-Fitness/workouts/` in place with the lifts, feel, and notes Dominic provided via `/coach`.
+
+The file is typically created earlier in the day by Strava sync and contains an `## Auto-captured (Strava)` block with placeholders for everything else. This skill fills in those placeholders.
 
 ---
 
 ## Input formats accepted
 
-This skill accepts flexible input:
+Flexible natural language:
 
-- Short: "day 1 push, bench 3x8 60kg, felt strong, 45min"
-- Longer prose: "just did my pull day, pullups felt good, rows were heavy though, overall about 50 min"
-- Minimal: "did push day"
+- "push day, bench 3x8 60kg, felt strong, 45min"
+- "just did pull day, pullups felt good, rows were heavy"
+- "legs, goblet squats 4x10 20kg, rdl 3x8 40kg, completed all sets"
 
 Parse intent — don't ask clarifying questions for the first-pass log.
 
 ---
 
-## Output format
+## Flow
+
+1. Determine today's date (`YYYY-MM-DD`).
+2. List `07-Fitness/workouts/` and find any file matching `YYYY-MM-DD-*.md`.
+3. **If a file exists** (typical case — Strava synced this morning):
+   - Read the file.
+   - Parse frontmatter and section boundaries.
+   - Update frontmatter `split_day:` to the split Dominic named (`push`, `pull`, `legs`).
+   - Update frontmatter `tags:` to include the split-day slug. Example: `[workout, strength, push, merged]`.
+   - Update the `# WeightTraining — YYYY-MM-DD` title to `# <Split Day> — YYYY-MM-DD` (e.g. `# Push Day — 2026-04-28`).
+   - Replace the `## Lifts` section placeholder with the normalized lift log.
+   - Replace the `## Feel` placeholder with feel info (one short phrase).
+   - Replace the `## Notes` placeholder with notes (form cues, soreness, what to focus on next).
+   - Replace the `## Related` placeholder with the relevant PPL wikilink (e.g. `- [[ppl-training-plan#push-1-strength]]` plus `- [[ppl-training-plan]]`).
+   - **Preserve the `## Auto-captured (Strava)` section EXACTLY as-is.**
+   - **Preserve frontmatter `date`, `sport`, `strava_id` EXACTLY as-is.**
+   - Write the file back.
+4. **If no file exists** (rare):
+   - Create `YYYY-MM-DD-<split-day>.md` using the template below, with the `## Auto-captured (Strava)` section as a placeholder that Strava sync will later update.
+
+---
+
+## New-file template (rare case — no Strava file yet)
 
 ```md
-# [Day type] — [date]
+---
+date: YYYY-MM-DD
+sport:
+split_day: <push|pull|legs|rest|other>
+strava_id:
+tags: [workout, <split-day>, coach-logged]
+---
 
-**Split day:** [push | pull | legs | rest | other]
-**Duration:** [if provided, else omit]
-**Feel:** [one word from user context — strong/okay/tired/heavy/rushed/etc]
+# <Split Day> — YYYY-MM-DD
+
+## Auto-captured (Strava)
+_Pending — will populate on next Strava sync._
 
 ---
 
 ## Lifts
-- [exercise] — [sets x reps @ weight]
-- [exercise] — [sets x reps @ weight]
+- <exercise> — <sets>x<reps> @ <weight>
+
+## Feel
+<one word or short phrase>
 
 ## Notes
-[anything else — form cues, soreness, what to focus on next time]
+<anything else — form cues, soreness, what to focus on next time>
 
-## Related auto-capture
-_If Strava synced a file for this date, link it here: [[YYYY-MM-DD-<sport>]]_
-
----
-tags: workout, [split-day-lowercase], coach-logged
-related: []
+## Related
+- [[ppl-training-plan#<split>-1-strength]]
+- [[ppl-training-plan]]
 ```
 
 If no lifts were mentioned, the Lifts section reads `_not logged in detail_`.
 
 ---
 
-## Filename
+## Lift parsing
 
-`YYYY-MM-DD-[split-day].md` saved to `07-Fitness/workouts/`
+Dominic logs lifts in natural language:
 
-- Split-day must be one of: `push`, `pull`, `legs`, `rest`, or `other`.
-- Do NOT use `-strength`, `-run`, `-ride`, `-walk`, or other Strava sport-type slugs — those are reserved for Strava-synced files and would cause collisions.
+- "bench 4x8 at 60kg"
+- "incline bench 4 sets of 8 reps at 60 kilograms"
+- "db shoulder press 3x10 30lb"
 
-Examples:
-- `2026-04-21-push.md`
-- `2026-04-22-pull.md`
-- `2026-04-23-legs.md`
+Normalize to a consistent format in the Lifts section:
+
+```
+- Incline Barbell Press — 4x8 @ 60 kg
+- Seated Shoulder Press — 3x10 @ 30 lb
+```
+
+- Em-dash (`—`) between exercise and sets/reps.
+- `@` before weight.
+- Keep units as given (kg / lb).
+- Title-case exercise names.
 
 ---
 
@@ -85,9 +123,8 @@ After logging, post to `Meta/agent-messages.md`:
 - Never invent weights or reps the user didn't provide
 - Preserve what they said — don't add structure they didn't ask for
 - If ambiguous, capture as-is — no clarifying questions for first-pass log
-- Filename always matches split day (push/pull/legs/rest/other)
 - Dates always YYYY-MM-DD
-- Duration field is optional — omit entirely if not provided
-- Before writing, check if a Strava-synced file exists for today's date in `07-Fitness/workouts/` (e.g. `YYYY-MM-DD-strength.md`, `YYYY-MM-DD-run.md`, `YYYY-MM-DD-ride.md`, `YYYY-MM-DD-walk.md`).
-  - If it exists, replace the `## Related auto-capture` placeholder line with the actual wikilink, e.g. `[[2026-04-28-strength]]`
-  - If it does not exist, remove the entire `## Related auto-capture` section — do not leave an empty placeholder
+- **Update existing files in place — do not create a second file for the same day**
+- **Never modify the `## Auto-captured (Strava)` section** — that belongs to Strava sync
+- **Never modify frontmatter `date`, `sport`, or `strava_id`** — those belong to Strava sync
+- When the existing file has tags like `[workout, strength, merged]`, add the split slug to produce `[workout, strength, <split>, merged]`
