@@ -39,8 +39,11 @@ Parse intent — don't ask clarifying questions for the first-pass log.
 ## Notes
 [anything else — form cues, soreness, what to focus on next time]
 
+## Related auto-capture
+_If Strava synced a file for this date, link it here: [[YYYY-MM-DD-<sport>]]_
+
 ---
-tags: workout, [split-day-lowercase]
+tags: workout, [split-day-lowercase], coach-logged
 related: []
 ```
 
@@ -51,6 +54,9 @@ If no lifts were mentioned, the Lifts section reads `_not logged in detail_`.
 ## Filename
 
 `YYYY-MM-DD-[split-day].md` saved to `07-Fitness/workouts/`
+
+- Split-day must be one of: `push`, `pull`, `legs`, `rest`, or `other`.
+- Do NOT use `-strength`, `-run`, `-ride`, `-walk`, or other Strava sport-type slugs — those are reserved for Strava-synced files and would cause collisions.
 
 Examples:
 - `2026-04-21-push.md`
@@ -82,3 +88,6 @@ After logging, post to `Meta/agent-messages.md`:
 - Filename always matches split day (push/pull/legs/rest/other)
 - Dates always YYYY-MM-DD
 - Duration field is optional — omit entirely if not provided
+- Before writing, check if a Strava-synced file exists for today's date in `07-Fitness/workouts/` (e.g. `YYYY-MM-DD-strength.md`, `YYYY-MM-DD-run.md`, `YYYY-MM-DD-ride.md`, `YYYY-MM-DD-walk.md`).
+  - If it exists, replace the `## Related auto-capture` placeholder line with the actual wikilink, e.g. `[[2026-04-28-strength]]`
+  - If it does not exist, remove the entire `## Related auto-capture` section — do not leave an empty placeholder
