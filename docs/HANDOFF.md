@@ -85,8 +85,7 @@ Out of scope for Phase 1 but mentioned for context — when OpenClaw is deployed
 
 For OpenClaw on the VM, the model routing will be:
 
-- **Haiku 4.5** default for Jot, Sorter, Connector, Heartbeat, Architect
-- **Sonnet 4.6** for Seeker, Librarian, Dev subcommands, the new digest-work-eod and aggregate-week skills
+- **meta-llama/llama-3.1-70b-instruct:free** default for Jot, Sorter, Connector, Heartbeat, Architect, Seeker, Librarian, Dev subcommands, the new digest-work-eod and aggregate-week skills
 
 This routing goes in `~/.openclaw/workspace/openclaw.json`. Phase 1 should include a **template** `openclaw.json` in the repo (maybe `Templates/openclaw.json.example`) that the installer copies into place with placeholder API keys. Don't commit real API keys.
 

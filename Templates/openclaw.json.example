@@ -1,16 +1,16 @@
 {
-  "api_key": "<YOUR_ANTHROPIC_API_KEY>",
+  "api_key": "<YOUR_OPENROUTER_API_KEY>",
   "workspace": "~/.openclaw/workspace",
   "model_routing": {
-    "jot":       "claude-haiku-4-5-20251001",
-    "sorter":    "claude-haiku-4-5-20251001",
-    "connector": "claude-haiku-4-5-20251001",
-    "architect": "claude-haiku-4-5-20251001",
-    "heartbeat": "claude-haiku-4-5-20251001",
-    "seeker":    "claude-sonnet-4-6",
-    "librarian": "claude-sonnet-4-6",
-    "dev":       "claude-sonnet-4-6",
-    "digest-work-eod": "claude-sonnet-4-6",
-    "aggregate-week":  "claude-sonnet-4-6"
+    "jot":       "meta-llama/llama-3.1-70b-instruct:free",
+    "sorter":    "meta-llama/llama-3.1-70b-instruct:free",
+    "connector": "meta-llama/llama-3.1-70b-instruct:free",
+    "architect": "meta-llama/llama-3.1-70b-instruct:free",
+    "heartbeat": "meta-llama/llama-3.1-70b-instruct:free",
+    "seeker":    "meta-llama/llama-3.1-70b-instruct:free",
+    "librarian": "meta-llama/llama-3.1-70b-instruct:free",
+    "dev":       "meta-llama/llama-3.1-70b-instruct:free",
+    "digest-work-eod": "meta-llama/llama-3.1-70b-instruct:free",
+    "aggregate-week":  "meta-llama/llama-3.1-70b-instruct:free"
   }
 }
